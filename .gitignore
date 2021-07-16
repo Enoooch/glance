@@ -1,5 +1,6 @@
 # env
 .env
+.env.production
 
 yarn.lock
 package-lock.json
@@ -7,12 +8,14 @@ pnpm-lock.yaml
 .eslintcache
 
 # dependencies
-/node_modules
+node_modules/
+.snowpack/
 /.pnp
 .pnp.js
 
 # production
-/build
+dist
+build
 
 # misc
 .DS_Store
