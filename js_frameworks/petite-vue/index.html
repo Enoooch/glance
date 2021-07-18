@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    section {
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+  <script type="module">
+    import { createApp, reactive } from 'https://unpkg.com/petite-vue?module'
+
+    const store = reactive({
+      count: 0,
+      inc() {
+        this.count++
+      }
+    })
+
+    function Counter(props) {
+      return {
+        $template: '#counter-template',
+        count: props.initialCount,
+        inc() {
+          this.count++
+        },
+        mounted() {
+          console.log(`I'm mounted!`)
+        }
+      }
+    }
+
+    createApp({
+      // store
+      store,
+      // components
+      Counter,
+      // exposed to all expressions
+      show: true,
+      count: 0,
+      // getters
+      get plusOne() {
+        return this.count + 1
+      },
+      // methods
+      increment() {
+        this.count++
+      }
+    }).mount()
+  </script>
+
+  <!-- Section 1 -->
+  <!-- v-scope value can not? be omitted -->
+  <section v-scope>
+    <p>{{ count }}</p>
+    <p>{{ plusOne }}</p>
+    <button @click="increment">increment</button>
+  </section>
+
+  <!-- Section 2 -->
+  <section v-scope>
+    <h1
+      v-if="show"
+      @mounted="console.log('mounted on: ', $el)"
+      @unmounted="console.log('unmounted: ', $el)"
+    >Hello World</h1>
+    <button @click="show = !show">toggle</button>
+  </section>
+
+  <!-- Section 3 -->
+  <section v-scope="{ count: 0 }">
+    <div v-effect="$el.textContent = count"></div>
+    <button @click="count++">++</button>
+  </section>
+
+  <!-- Section 4 -->
+  <template id="counter-template">
+    My count is {{ count }}
+    <button @click="inc">++</button>
+  </template>
+
+  <section v-scope="Counter({ initialCount: 1 })" @mounted="mounted"></section>
+
+  <!-- Section 5 -->
+  <section v-scope="{ count: 0 }">
+    <p>Global {{ store.count }}</p>
+    <button @click="store.inc">increment</button>
+  </section>
+
+</body>
+</html>
